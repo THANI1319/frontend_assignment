@@ -122,8 +122,9 @@ function App() {
 export default App
  */
 
-import './App.css'
+/* import './App.css'
 import { useState } from "react"
+import { useEffect } from 'react'
 
 const App =()=>{
   const [counter,setCounter] =useState(0);
@@ -153,20 +154,14 @@ const App =()=>{
   const resetCounter=()=>{
     setCounter(0)
     setColor("black")
-  setTextColor("white")
+    setTextColor("white")
   }
+
+
   return(
-    <div className='container'>
+    <div class='container'>
       <h1>COUNTER APP</h1>
-      <div
-        className="counter-box"
-        style={{
-          backgroundColor: color,
-          color: textColor
-        }}
-      >
-      Counter : {counter}
-      </div>
+      <div class="counter-box" style={{backgroundColor: color,color: textColor}}>COUNTER : {counter}</div>
       <button class="a" onClick={increementCounter}>Addition</button>
       <button class="b" onClick={decreementCounter}>Subtraction</button>
       <button class="c" onClick={multiplyCounter}>Multiplication</button>
@@ -176,7 +171,71 @@ const App =()=>{
     </div>
   )
 }
+ */
 
+import { useState,useEffect } from 'react'
+import './App.css'
+
+function App() {
+  const [user, setUser] = useState([])
+  const [loader,setLoader] = useState(false)
+  const [error,setError] = useState("")
+
+
+  useEffect(()=>{
+
+    let ignore = false;
+    const load=async()=>{
+      setLoader(true);setError("") 
+    
+    try{
+      const res = await fetch("https://jsonplaceholder.typicode.com/users")
+      console.log(res,"Response Fetched")
+      if(res.ok || res.status==200){
+        const data = await res.json();
+        console.log(data,"data");
+        setUser(data)
+
+      }
+      else{
+        throw new Error(`Status ${err.status}`)
+      }
+    }
+    catch(e){
+
+    }
+    finally{
+      if(!ignore) setLoader(false)
+    
+    }
+  }
+  load();
+  return()=>{
+    ignore=true;
+  }
+
+  },[])
+  return <>
+  {loader?<>Page is Loading</>:<>
+    <header>User Listed Below:</header>
+    {user?.map((element,index)=><div key={index}>
+      <div class="details">
+      <center>Id:{element.id}</center>
+       <center> Name:{element.name}</center>
+       <center> Username:{element.username}</center>
+      <center>Email:{element.email}</center>
+        <center>Address:{element.address.street},{element.address.suite},{element.address.city},{element.address.zipcode},{element.address.geo.lat},{element.address.geo.lng}</center>
+      <center>Phone:{element.phone}</center>
+      <center>Website:{element.website}</center>
+       <center>Company:{element.company.name}, {element.company.catchPhrase}, {element.company.bs}</center>
+       </div>
+      </div>)}
+      </>}
+
+  
+  </>
+}
+  
 export default App
 
 
